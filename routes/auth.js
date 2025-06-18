@@ -1,18 +1,13 @@
-import express from "express"
+import express from "express";
 //controllers
-import { login, register } from "../controllers/auth.js"
+import { login, register } from "../controllers/auth.js";
+import { loginSchema, registerSchema, validate } from "../validations/validator.js";
 
-
-const router = express.Router()
-
+const router = express.Router();
 
 // ENDPOINT http://localhost:8000/auth/register
-router.post('/register',register)
+router.post("/register", validate(registerSchema), register);
 
-router.get('/login',login)
+router.get("/login", validate(loginSchema),login);
 
-
-
-
-export default router
-
+export default router;

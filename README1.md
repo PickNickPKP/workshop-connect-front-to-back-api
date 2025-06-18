@@ -15,3 +15,10 @@ npm install cors morgan nodemon
 ```bash
 npx nodemon server
 ```
+
+### Git
+```bash
+git add .
+git commit -m "message"
+git push
+```
