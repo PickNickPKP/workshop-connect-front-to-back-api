@@ -8,6 +8,6 @@ const router = express.Router();
 // ENDPOINT http://localhost:8000/auth/register
 router.post("/register", validate(registerSchema), register);
 
-router.get("/login", validate(loginSchema),login);
+router.post("/login", validate(loginSchema),login);
 
 export default router;

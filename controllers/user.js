@@ -1,17 +1,80 @@
 import { createError } from "../utils/createError.js";
+import prisma from "../config/prisma.js";
 
-export const listUser = (req, res, next) => {
+export const listUser = async (req, res, next) => {
   try {
-    if (true) {
-      createError(400, "Email already exist!!!");
-    } else {
-      throw new Error("Password is Invalid");
-    }
-    res.json({ message: "This is list All User" });
+    const user = await prisma.user.findMany({
+      omit: {
+        password: true,
+      },
+    });
+    console.log(user);
+
+    res.json({
+      message: "This is list All User",
+      result: user,
+    });
   } catch (error) {
     next(error);
   }
 };
+
+export const updateRoleUser = async (req, res, next) => {
+  try {
+    // 1. Read params & body
+    const { id } = req.params;
+    const { role } = req.body;
+    console.log(id, role);
+
+    const user = await prisma.user.update({
+      where: {
+        id: Number(id),
+      },
+      data: {
+        role: role,
+      },
+    });
+
+    res.json({ message: `Update Role ${user.name}` });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteUser = async (req, res,next) => {
+  try {
+    const { id } = req.params;
+    const user = await prisma.user.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.json({ message: "This is Delete success!!!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMe = async (req, res,next) => {
+  try {
+    const {id} = req.user;
+    console.log(id)
+    const user = await prisma.user.findFirst({
+      where:{
+        id: Number(id)
+      },
+      omit:{
+        password:true
+      }
+    })
+
+    res.json({result: user,
+      message:"จบแล้ว Backend // Frontend ไปกันต่อ..."
+    })
+  } catch (error) {
+    next(error)
+  }
+}
 
 export const readUser = (req, res) => {
   res.json({ message: "This is read User" });
@@ -19,12 +82,4 @@ export const readUser = (req, res) => {
 
 export const postUser = (req, res) => {
   res.json({ message: "This is post User" });
-};
-
-export const updateRoleUser = (req, res) => {
-  res.json({ message: "This is Update Role User" });
-};
-
-export const deleteUser = (req, res) => {
-  res.json({ message: "This is Delete User" });
 };
